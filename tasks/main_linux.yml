@@ -1,0 +1,19 @@
+---
+- name: Add Java 8 PPA for Ubuntu 12 and 14
+  apt_repository: repo='ppa:openjdk-r/ppa'
+  when: ansible_distribution == 'Ubuntu' and (ansible_distribution_release == 'trusty' or ansible_distribution_release == 'precise')
+
+# Run the equivalent of "apt-get update" as a separate step
+- name: Update apt-get cache ...
+  apt: update_cache=yes
+  when: ansible_os_family == 'Debian'
+
+  # Java 8
+- name: Install Java 8 Runtime (RHEL/yum)
+  package: name=java-1.8.0-openjdk state=present
+  when: ansible_os_family == 'RedHat'
+
+- name: Install Java 8 Runtime (Debian/apt-get)
+  package: name=openjdk-8-jre state=present
+  when: ansible_os_family == 'Debian'
+
